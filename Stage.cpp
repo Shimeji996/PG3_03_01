@@ -37,20 +37,20 @@ void Stage::CheckAllCollision() {
 		enemy->OnCollision();
 	}
 
-	Vector2 posA, posB;
+	Vector2 EnemyPos, BulletPos;
 
 	const std::list<PlayerBullet*>& playerBullets = player->GetBullets();
 
 	for (PlayerBullet* bullet : playerBullets) {
 	
-		posA = enemy->Pos();
+		EnemyPos = enemy->Pos();
 		
-		posB = bullet->GetWorldPosition();
+		BulletPos = bullet->GetWorldPosition();
 
-		if (posA.x + 300 >= posB.x &&
-			posB.x + 50 >= posA.x &&
-			posA.y + 300 >= posB.y &&
-			posB.y + 50 >= posA.y) {
+		if (EnemyPos.x + 300 >= BulletPos.x &&
+			BulletPos.x + 50 >= EnemyPos.x &&
+			EnemyPos.y + 300 >= BulletPos.y &&
+			BulletPos.y + 50 >= EnemyPos.y) {
 			
 			enemy->OnCollision();
 			bullet->OnCollision();
