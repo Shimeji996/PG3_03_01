@@ -1,23 +1,34 @@
 #pragma once
-#include <memory>
 #include "IScene.h"
-#include <Input.h>
-#include "Player.h"
-#include "Enemy.h"
+#include <Novice.h>
+#include "Vector2.h"
 
-class Stage : public IScene
+class StageScene : public IScene
 {
 public:
-	void Initialize();
-	void Update();
-	void Draw();
 
-	void CheckAllCollision();
+	void Initialize() override;
+
+	void Update() override;
+
+	void Draw() override;
 
 private:
-	Input* input;
+	// キー入力結果を受け取る箱
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
-	std::unique_ptr<Player> player;
-	std::unique_ptr<Enemy> enemy;
+	Vector2 playerPos;
+	Vector2 enemyPos;
+
+	Vector2 bulletPos;
+
+	int bulletSize;
+	int enemySize;
+
+	float speed;
+
+	bool isAlive;
+	bool isBulletShot;
+
 };
-

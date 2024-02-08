@@ -1,15 +1,21 @@
 #pragma once
 #include "IScene.h"
-#include <Input.h>
+#include <Novice.h>
 
-class Clear : public IScene
+class ClearScene : public IScene
 {
 public:
-	void Initialize();
-	void Update();
-	void Draw();
+
+	void Initialize() override;
+
+	void Update() override;
+
+	void Draw() override;
 
 private:
-	Input* input;
+	// キー入力結果を受け取る箱
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
+
 };
 

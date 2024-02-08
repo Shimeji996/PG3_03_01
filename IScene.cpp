@@ -2,4 +2,4 @@
 
 int IScene::sceneNo = TITLE;
 
-IScene::~IScene(){}
+IScene::~IScene() {};

@@ -1,60 +1,53 @@
 #include "Stage.h"
 
-void Stage::Initialize() {
+void StageScene::Initialize() {
+	playerPos = { 640,360 };
+	enemyPos = { 640,0 };
+	bulletPos = { playerPos.x,playerPos.y };
 
-	input = Input::GetInstance();
-	player = std::make_unique<Player>();
-	player->Initialize();
+	bulletSize = 20;
+	enemySize = 50;
 
-	enemy = std::make_unique<Enemy>();
-	enemy->Initialize();
+	speed = 5.0f;
+
+	isAlive = true;
+	isBulletShot = false;
 
 }
 
-void Stage::Update() {
+void StageScene::Update() {
+	// キー入力を受け取る
+	memcpy(preKeys, keys, 256);
+	Novice::GetHitKeyStateAll(keys);
 
-	player->Update();
-	enemy->Update();
+	if (preKeys[DIK_SPACE] == 0 && keys[DIK_SPACE]) {
+		isBulletShot = true;
+	}
 
-	CheckAllCollision();
+	if (isBulletShot == true) {
+		bulletPos.y -= speed;
+	}
 
-	if (enemy->Dead()) {
+	//色の変換
+	if (bulletPos.x >= enemyPos.x - enemySize / 2 &&
+		bulletPos.y >= enemyPos.y - enemySize / 2 &&
+		bulletPos.x <= enemyPos.x + enemySize &&
+		bulletPos.y <= enemyPos.y + enemySize) {
+		isAlive = false;
+	}
+
+	if (isAlive == false) {
 		sceneNo = CLEAR;
 	}
 
 }
 
-void Stage::Draw() {
+void StageScene::Draw() {
 
-	player->Draw();
-	enemy->Draw();
+	Novice::DrawBox(int(playerPos.x), int(playerPos.y), 32, 32, 0.0f, WHITE, kFillModeSolid);
+	Novice::DrawBox(int(enemyPos.x), int(enemyPos.y), enemySize, enemySize, 0.0f, WHITE, kFillModeSolid);
+	Novice::DrawBox(int(bulletPos.x), int(bulletPos.y), bulletSize, bulletSize, 0.0f, WHITE, kFillModeSolid);
 
-}
-
-void Stage::CheckAllCollision() {
-
-	if (input->TriggerKey(DIK_RETURN)) {
-		enemy->OnCollision();
-	}
-
-	Vector2 EnemyPos, BulletPos;
-
-	const std::list<PlayerBullet*>& playerBullets = player->GetBullets();
-
-	for (PlayerBullet* bullet : playerBullets) {
-	
-		EnemyPos = enemy->Pos();
-		
-		BulletPos = bullet->GetWorldPosition();
-
-		if (EnemyPos.x + 300 >= BulletPos.x &&
-			BulletPos.x + 50 >= EnemyPos.x &&
-			EnemyPos.y + 300 >= BulletPos.y &&
-			BulletPos.y + 50 >= EnemyPos.y) {
-			
-			enemy->OnCollision();
-			bullet->OnCollision();
-		}
-	}
-
+	Novice::ScreenPrintf(0, 0, "SCENE : STAGE");
+	Novice::ScreenPrintf(0, 20, "Press[SPACE]");
 }
