@@ -13,4 +13,5 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	gameManager->Run();
 
+	return 0;
 }
